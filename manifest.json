@@ -1,0 +1,22 @@
+{
+  "name": "ClientFlow - Gestão de Serviços",
+  "short_name": "ClientFlow",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d4ed8",
+  "description": "Controle de clientes, serviços e cobranças para prestadores de serviço e freelancers.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3126/3126647.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3126/3126647.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
