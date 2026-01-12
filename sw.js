@@ -4,18 +4,20 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './script.js',
   './manifest.json',
-  // Se você tiver um style.css separado, adicione aqui:
-  // './style.css',
   'https://cdn.tailwindcss.com',
-  'https://unpkg.com/lucide@0.454.1/dist/lucide.min.js', // Versão fixa é mais segura para cache
+  'https://unpkg.com/lucide@0.454.1/dist/lucide.min.js', 
   'https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js'
 ];
 
 self.addEventListener('install', event => {
-  // skipWaiting força o novo SW a assumir o controle imediatamente
-  self.skipWaiting();
+  self.skipWaiting(); // [Ajuste]: Força a atualização imediata
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache => {
+      // [Ajuste]: Tenta cachear, mas ignora se falhar em algum recurso externo
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(url => cache.add(url))
+      );
+    })
   );
 });
 
@@ -27,15 +29,13 @@ self.addEventListener('activate', event => {
       }));
     })
   );
-  // Garante que o SW controle a página imediatamente sem precisar recarregar
   self.clients.claim();
 });
 
-// Estratégia: NETWORK FIRST com fallback para CACHE
-// Assim, se o cliente tiver internet, ele vê as atualizações do Vercel.
-// Se estiver no modo avião, ele usa o cache instantaneamente.
+// [Ajuste]: Estratégia Network-First (Tenta internet, se falhar usa cache)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    fetch(event.request)
+      .catch(() => caches.match(event.request))
   );
 });
